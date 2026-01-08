@@ -326,7 +326,7 @@ export default async function ProductsPage({
       </div>
 
       {/* Filters Bar */}
-      <div className="mb-8 flex flex-col gap-4 rounded-lg border bg-muted/30 p-4 sm:flex-row sm:items-center">
+      <div className="mb-8 flex flex-col gap-3 rounded-xl border border-primary/10 bg-white p-4 shadow-sm sm:flex-row sm:items-center sm:gap-4">
         {/* Search */}
         <form className="relative flex-1" action="/productos">
           <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
@@ -466,7 +466,7 @@ export default async function ProductsPage({
 
       {/* Products Grid */}
       {filteredProducts.length > 0 ? (
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        <div className="grid grid-cols-2 gap-3 sm:gap-6 lg:grid-cols-3 xl:grid-cols-4">
           {filteredProducts.map((product) => (
             <ProductCard key={product.id} product={product} />
           ))}

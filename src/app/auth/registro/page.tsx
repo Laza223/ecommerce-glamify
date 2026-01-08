@@ -14,7 +14,7 @@ import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
 import { storeConfig } from "@/config/store";
 import { createClient } from "@/lib/supabase/client";
-import { Eye, EyeOff, Loader2 } from "lucide-react";
+import { ArrowLeft, Eye, EyeOff, Loader2 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
@@ -98,7 +98,15 @@ function RegisterForm() {
 
   return (
     <Card className="w-full max-w-md">
-      <CardHeader className="text-center">
+      <CardHeader className="text-center relative">
+        {/* Back button */}
+        <Link
+          href="/"
+          className="absolute left-4 top-4 p-2 rounded-full hover:bg-muted transition-colors"
+        >
+          <ArrowLeft className="h-5 w-5" />
+        </Link>
+
         <Link href="/" className="mx-auto mb-4 flex items-center gap-2">
           <Image
             src="/logo-glamify-makeup.jpeg"

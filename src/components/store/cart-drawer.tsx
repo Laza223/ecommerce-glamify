@@ -1,14 +1,19 @@
-'use client'
+"use client";
 
-import { Button } from '@/components/ui/button'
-import { ScrollArea } from '@/components/ui/scroll-area'
-import { Separator } from '@/components/ui/separator'
-import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet'
-import { storeConfig } from '@/config/store'
-import { useCartStore } from '@/stores/cart-store'
-import { Minus, Plus, ShoppingBag, Trash2 } from 'lucide-react'
-import Image from 'next/image'
-import Link from 'next/link'
+import { Button } from "@/components/ui/button";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Separator } from "@/components/ui/separator";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+} from "@/components/ui/sheet";
+import { storeConfig } from "@/config/store";
+import { useCartStore } from "@/stores/cart-store";
+import { Minus, Plus, ShoppingBag, Trash2 } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
 
 export function CartDrawer() {
   const {
@@ -19,33 +24,33 @@ export function CartDrawer() {
     updateQuantity,
     getSubtotal,
     getItemPrice,
-  } = useCartStore()
+  } = useCartStore();
 
-  const subtotal = getSubtotal()
+  const subtotal = getSubtotal();
   const shipping =
     subtotal >= storeConfig.freeShippingThreshold
       ? 0
-      : storeConfig.defaultShippingCost
-  const total = subtotal + shipping
+      : storeConfig.defaultShippingCost;
+  const total = subtotal + shipping;
 
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat(storeConfig.locale, {
-      style: 'currency',
+      style: "currency",
       currency: storeConfig.currency,
       minimumFractionDigits: 0,
-    }).format(price)
-  }
+    }).format(price);
+  };
 
   return (
     <Sheet open={isOpen} onOpenChange={closeCart}>
-      <SheetContent className="flex w-full flex-col sm:max-w-lg">
+      <SheetContent className="flex w-full flex-col px-6 sm:max-w-lg">
         <SheetHeader>
           <SheetTitle className="flex items-center gap-2">
             <ShoppingBag className="h-5 w-5 text-primary" />
             Tu Carrito
             {items.length > 0 && (
               <span className="text-sm font-normal text-muted-foreground">
-                ({items.length} {items.length === 1 ? 'producto' : 'productos'})
+                ({items.length} {items.length === 1 ? "producto" : "productos"})
               </span>
             )}
           </SheetTitle>
@@ -71,7 +76,7 @@ export function CartDrawer() {
             <ScrollArea className="flex-1 -mx-6 px-6">
               <div className="space-y-4 py-4">
                 {items.map((item) => {
-                  const itemPrice = getItemPrice(item)
+                  const itemPrice = getItemPrice(item);
                   return (
                     <div
                       key={`${item.product_id}-${item.variant_id}`}
@@ -160,7 +165,7 @@ export function CartDrawer() {
                         </div>
                       </div>
                     </div>
-                  )
+                  );
                 })}
               </div>
             </ScrollArea>
@@ -186,7 +191,7 @@ export function CartDrawer() {
                 </div>
                 {shipping > 0 && (
                   <p className="text-xs text-muted-foreground">
-                    Envío gratis en compras mayores a{' '}
+                    Envío gratis en compras mayores a{" "}
                     {formatPrice(storeConfig.freeShippingThreshold)}
                   </p>
                 )}
@@ -218,5 +223,5 @@ export function CartDrawer() {
         )}
       </SheetContent>
     </Sheet>
-  )
+  );
 }

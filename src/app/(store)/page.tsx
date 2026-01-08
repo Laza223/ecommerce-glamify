@@ -2,7 +2,7 @@ import { ProductCard } from "@/components/store/product-card";
 import { Button } from "@/components/ui/button";
 import { storeConfig } from "@/config/store";
 import type { Category, Product } from "@/types";
-import { ArrowRight, Gift, Shield, Sparkles, Truck } from "lucide-react";
+import { ArrowRight, Shield, Sparkles, Truck } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -162,16 +162,6 @@ const features = [
     title: "Pago Seguro",
     description: "Todas las transacciones protegidas",
   },
-  {
-    icon: Gift,
-    title: "Regalos Exclusivos",
-    description: "Muestras gratis en cada pedido",
-  },
-  {
-    icon: Sparkles,
-    title: "Productos Originales",
-    description: "100% productos auténticos",
-  },
 ];
 
 export default function HomePage() {
@@ -184,7 +174,7 @@ export default function HomePage() {
           <div className="absolute -bottom-40 -left-40 h-80 w-80 rounded-full bg-primary/10 blur-3xl" />
         </div>
 
-        <div className="container relative mx-auto px-4 py-20 lg:py-32">
+        <div className="container relative mx-auto px-4 py-20">
           <div className="grid gap-12 lg:grid-cols-2 lg:items-center">
             <div className="space-y-8">
               <div className="inline-flex items-center gap-2 rounded-full bg-primary/10 px-4 py-2 text-sm font-medium text-primary">
@@ -198,8 +188,8 @@ export default function HomePage() {
               </h1>
 
               <p className="max-w-lg text-lg text-muted-foreground">
-                Descubrí nuestra colección exclusiva de maquillaje profesional.
-                Productos de alta calidad para un look impecable todos los días.
+                Descubrí nuestra colección exclusiva de maquillaje. Productos de
+                alta calidad para un look impecable todos los días.
               </p>
 
               <div className="flex flex-col gap-4 sm:flex-row">
@@ -215,16 +205,15 @@ export default function HomePage() {
               </div>
             </div>
 
-            <div className="relative hidden lg:block">
-              <div className="relative aspect-square">
-                <div className="absolute inset-0 rounded-full bg-gradient-to-br from-primary/20 to-secondary blur-2xl" />
-                <Image
-                  src="/logo-glamify-makeup.jpeg"
-                  alt="Glamify Makeup"
-                  fill
-                  className="object-contain p-8"
-                  priority
-                />
+            {/* Decorative gradient - Desktop only */}
+            <div className="relative hidden lg:flex items-center justify-center">
+              <div className="relative h-96 w-96">
+                {/* Main gradient circle */}
+                <div className="absolute right-0 top-0 h-72 w-72 rounded-full bg-gradient-to-br from-primary via-primary/60 to-primary/20 blur-3xl opacity-60" />
+                {/* Secondary accent */}
+                <div className="absolute bottom-10 left-10 h-40 w-40 rounded-full bg-gradient-to-tr from-secondary to-primary/30 blur-2xl opacity-50" />
+                {/* Small highlight */}
+                <div className="absolute right-20 bottom-20 h-24 w-24 rounded-full bg-white/40 blur-xl" />
               </div>
             </div>
           </div>
@@ -234,7 +223,7 @@ export default function HomePage() {
       {/* Features */}
       <section className="border-y bg-muted/30 py-8">
         <div className="container mx-auto px-4">
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="mx-auto flex max-w-2xl flex-col gap-6 sm:flex-row sm:justify-between">
             {features.map((feature) => (
               <div key={feature.title} className="flex items-center gap-4">
                 <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
@@ -264,7 +253,7 @@ export default function HomePage() {
             </p>
           </div>
 
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="grid grid-cols-2 gap-3 sm:gap-6 lg:grid-cols-4">
             {mockCategories.map((category) => (
               <Link
                 key={category.id}
@@ -313,7 +302,7 @@ export default function HomePage() {
             </Button>
           </div>
 
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="grid grid-cols-2 gap-3 sm:gap-6 lg:grid-cols-4">
             {mockProducts.map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}
@@ -343,8 +332,8 @@ export default function HomePage() {
             ¿Lista para brillar?
           </h2>
           <p className="mx-auto mt-4 max-w-2xl text-lg text-white/90">
-            Suscribite a nuestro newsletter y recibí un 10% de descuento en tu
-            primera compra, además de ofertas exclusivas.
+            Suscribite a nuestro newsletter y recibí ofertas exclusivas y
+            novedades antes que nadie.
           </p>
           <div className="mx-auto mt-8 flex max-w-md flex-col gap-4 sm:flex-row">
             <input
@@ -365,7 +354,7 @@ export default function HomePage() {
 
       {/* WhatsApp Button */}
       <a
-        href="https://wa.me/5491112345678"
+        href={storeConfig.whatsapp}
         target="_blank"
         rel="noopener noreferrer"
         className="fixed bottom-6 right-6 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-[#25D366] text-white shadow-lg transition-transform hover:scale-110"

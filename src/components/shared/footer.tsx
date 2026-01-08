@@ -1,7 +1,7 @@
-import { storeConfig } from '@/config/store'
-import { Facebook, Instagram, Mail, MapPin, Phone } from 'lucide-react'
-import Image from 'next/image'
-import Link from 'next/link'
+import { storeConfig } from "@/config/store";
+import { Facebook, Instagram, Mail, MapPin, Phone } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
 
 export function Footer() {
   return (
@@ -24,7 +24,7 @@ export function Footer() {
               </span>
             </Link>
             <p className="text-sm text-muted-foreground">
-              {storeConfig.description}. Los mejores productos de maquillaje 
+              {storeConfig.description}. Los mejores productos de maquillaje
               para realzar tu belleza natural.
             </p>
             <div className="flex gap-4">
@@ -52,17 +52,26 @@ export function Footer() {
             <h3 className="font-semibold">Tienda</h3>
             <ul className="space-y-2 text-sm">
               <li>
-                <Link href="/productos" className="text-muted-foreground hover:text-primary">
+                <Link
+                  href="/productos"
+                  className="text-muted-foreground hover:text-primary"
+                >
                   Todos los Productos
                 </Link>
               </li>
               <li>
-                <Link href="/productos?ofertas=true" className="text-muted-foreground hover:text-primary">
+                <Link
+                  href="/productos?ofertas=true"
+                  className="text-muted-foreground hover:text-primary"
+                >
                   Ofertas
                 </Link>
               </li>
               <li>
-                <Link href="/productos?nuevos=true" className="text-muted-foreground hover:text-primary">
+                <Link
+                  href="/productos?nuevos=true"
+                  className="text-muted-foreground hover:text-primary"
+                >
                   Nuevos Ingresos
                 </Link>
               </li>
@@ -74,22 +83,34 @@ export function Footer() {
             <h3 className="font-semibold">Información</h3>
             <ul className="space-y-2 text-sm">
               <li>
-                <Link href="/sobre-nosotros" className="text-muted-foreground hover:text-primary">
+                <Link
+                  href="/sobre-nosotros"
+                  className="text-muted-foreground hover:text-primary"
+                >
                   Sobre Nosotros
                 </Link>
               </li>
               <li>
-                <Link href="/envios" className="text-muted-foreground hover:text-primary">
+                <Link
+                  href="/envios"
+                  className="text-muted-foreground hover:text-primary"
+                >
                   Envíos
                 </Link>
               </li>
               <li>
-                <Link href="/devoluciones" className="text-muted-foreground hover:text-primary">
+                <Link
+                  href="/devoluciones"
+                  className="text-muted-foreground hover:text-primary"
+                >
                   Devoluciones
                 </Link>
               </li>
               <li>
-                <Link href="/terminos" className="text-muted-foreground hover:text-primary">
+                <Link
+                  href="/terminos"
+                  className="text-muted-foreground hover:text-primary"
+                >
                   Términos y Condiciones
                 </Link>
               </li>
@@ -110,7 +131,7 @@ export function Footer() {
               </li>
               <li className="flex items-center gap-2 text-muted-foreground">
                 <MapPin className="h-4 w-4 text-primary" />
-                {storeConfig.country}
+                {storeConfig.city}
               </li>
             </ul>
             <p className="text-xs text-muted-foreground">
@@ -122,7 +143,8 @@ export function Footer() {
         {/* Bottom */}
         <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t pt-8 text-center text-sm text-muted-foreground md:flex-row">
           <p>
-            © {new Date().getFullYear()} {storeConfig.name}. Todos los derechos reservados.
+            © {new Date().getFullYear()} {storeConfig.name}. Todos los derechos
+            reservados.
           </p>
           <div className="flex gap-4">
             <Link href="/privacidad" className="hover:text-primary">
@@ -135,5 +157,5 @@ export function Footer() {
         </div>
       </div>
     </footer>
-  )
+  );
 }
