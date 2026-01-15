@@ -8,7 +8,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import type { Category, Product } from "@/types";
+import { createClient } from "@/lib/supabase/server";
 import { Search, SlidersHorizontal, X } from "lucide-react";
 import type { Metadata } from "next";
 
@@ -16,237 +16,6 @@ export const metadata: Metadata = {
   title: "Productos",
   description: "Explorá nuestra colección completa de maquillaje profesional",
 };
-
-// Mock data - replace with Supabase queries
-const mockCategories: Category[] = [
-  {
-    id: "1",
-    name: "Labiales",
-    slug: "labiales",
-    description: "Los mejores labiales",
-    image_url:
-      "https://images.unsplash.com/photo-1586495777744-4413f21062fa?w=400",
-    is_active: true,
-    display_order: 1,
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-  },
-  {
-    id: "2",
-    name: "Bases",
-    slug: "bases",
-    description: "Bases y correctores",
-    image_url:
-      "https://images.unsplash.com/photo-1596704017254-9b121068fb31?w=400",
-    is_active: true,
-    display_order: 2,
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-  },
-  {
-    id: "3",
-    name: "Ojos",
-    slug: "ojos",
-    description: "Maquillaje para ojos",
-    image_url:
-      "https://images.unsplash.com/photo-1583241800698-e8ab01830a07?w=400",
-    is_active: true,
-    display_order: 3,
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-  },
-  {
-    id: "4",
-    name: "Brochas",
-    slug: "brochas",
-    description: "Sets de brochas",
-    image_url:
-      "https://images.unsplash.com/photo-1527799820374-dcf8d9d4a388?w=400",
-    is_active: true,
-    display_order: 4,
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-  },
-];
-
-const mockProducts: Product[] = [
-  {
-    id: "1",
-    category_id: "1",
-    name: "Labial Matte Velvet Rose",
-    slug: "labial-matte-velvet-rose",
-    description: "Labial de larga duración con acabado matte aterciopelado",
-    price: 4500,
-    compare_at_price: 5500,
-    cost_per_item: null,
-    sku: "LAB-001",
-    barcode: null,
-    stock: 15,
-    low_stock_threshold: 5,
-    images: [
-      "https://images.unsplash.com/photo-1586495777744-4413f21062fa?w=400",
-    ],
-    is_active: true,
-    is_featured: true,
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-    category: mockCategories[0],
-  },
-  {
-    id: "2",
-    category_id: "2",
-    name: "Base Líquida Full Coverage",
-    slug: "base-liquida-full-coverage",
-    description: "Cobertura total que dura todo el día",
-    price: 8900,
-    compare_at_price: null,
-    cost_per_item: null,
-    sku: "BAS-001",
-    barcode: null,
-    stock: 20,
-    low_stock_threshold: 5,
-    images: [
-      "https://images.unsplash.com/photo-1596704017254-9b121068fb31?w=400",
-    ],
-    is_active: true,
-    is_featured: true,
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-    category: mockCategories[1],
-  },
-  {
-    id: "3",
-    category_id: "3",
-    name: "Paleta de Sombras Sunset",
-    slug: "paleta-sombras-sunset",
-    description: "12 tonos vibrantes para looks de día y noche",
-    price: 12500,
-    compare_at_price: 15000,
-    cost_per_item: null,
-    sku: "PAL-001",
-    barcode: null,
-    stock: 8,
-    low_stock_threshold: 5,
-    images: [
-      "https://images.unsplash.com/photo-1583241800698-e8ab01830a07?w=400",
-    ],
-    is_active: true,
-    is_featured: true,
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-    category: mockCategories[2],
-  },
-  {
-    id: "4",
-    category_id: "4",
-    name: "Set de Brochas Profesional",
-    slug: "set-brochas-profesional",
-    description: "12 brochas premium de pelo sintético suave",
-    price: 18900,
-    compare_at_price: null,
-    cost_per_item: null,
-    sku: "BRO-001",
-    barcode: null,
-    stock: 3,
-    low_stock_threshold: 5,
-    images: [
-      "https://images.unsplash.com/photo-1527799820374-dcf8d9d4a388?w=400",
-    ],
-    is_active: true,
-    is_featured: true,
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-    category: mockCategories[3],
-  },
-  {
-    id: "5",
-    category_id: "1",
-    name: "Labial Glossy Paradise",
-    slug: "labial-glossy-paradise",
-    description: "Brillo de labios con efecto plump",
-    price: 3200,
-    compare_at_price: null,
-    cost_per_item: null,
-    sku: "LAB-002",
-    barcode: null,
-    stock: 25,
-    low_stock_threshold: 5,
-    images: [
-      "https://images.unsplash.com/photo-1631214540553-ff044a3ff1ea?w=400",
-    ],
-    is_active: true,
-    is_featured: false,
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-    category: mockCategories[0],
-  },
-  {
-    id: "6",
-    category_id: "3",
-    name: "Delineador Líquido Precision",
-    slug: "delineador-liquido-precision",
-    description: "Punta ultra fina para trazos perfectos",
-    price: 2800,
-    compare_at_price: 3500,
-    cost_per_item: null,
-    sku: "DEL-001",
-    barcode: null,
-    stock: 18,
-    low_stock_threshold: 5,
-    images: [
-      "https://images.unsplash.com/photo-1512496015851-a90fb38ba796?w=400",
-    ],
-    is_active: true,
-    is_featured: false,
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-    category: mockCategories[2],
-  },
-  {
-    id: "7",
-    category_id: "2",
-    name: "Corrector de Ojeras HD",
-    slug: "corrector-ojeras-hd",
-    description: "Alta cobertura para un look descansado",
-    price: 5600,
-    compare_at_price: null,
-    cost_per_item: null,
-    sku: "COR-001",
-    barcode: null,
-    stock: 12,
-    low_stock_threshold: 5,
-    images: [
-      "https://images.unsplash.com/photo-1631214524020-7e4e9b6c8a9d?w=400",
-    ],
-    is_active: true,
-    is_featured: false,
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-    category: mockCategories[1],
-  },
-  {
-    id: "8",
-    category_id: "3",
-    name: "Máscara de Pestañas Volume",
-    slug: "mascara-pestanas-volume",
-    description: "Volumen extremo sin grumos",
-    price: 4200,
-    compare_at_price: 5000,
-    cost_per_item: null,
-    sku: "MAS-001",
-    barcode: null,
-    stock: 30,
-    low_stock_threshold: 5,
-    images: [
-      "https://images.unsplash.com/photo-1631214540553-333333333333?w=400",
-    ],
-    is_active: true,
-    is_featured: false,
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-    category: mockCategories[2],
-  },
-];
 
 interface ProductsPageProps {
   searchParams: Promise<{
@@ -263,55 +32,68 @@ export default async function ProductsPage({
   const params = await searchParams;
   const { categoria, buscar, ordenar, ofertas } = params;
 
-  // Filter products (in production, this would be a Supabase query)
-  let filteredProducts = [...mockProducts];
+  const supabase = await createClient();
 
+  // Fetch categories
+  const { data: categories } = await supabase
+    .from("categories")
+    .select("*")
+    .eq("is_active", true)
+    .order("display_order");
+
+  // Build products query
+  let query = supabase
+    .from("products")
+    .select(
+      `
+      *,
+      category:categories(id, name, slug)
+    `
+    )
+    .eq("is_active", true);
+
+  // Filter by category
   if (categoria) {
-    filteredProducts = filteredProducts.filter(
-      (p) => p.category?.slug === categoria
-    );
-  }
-
-  if (buscar) {
-    const searchLower = buscar.toLowerCase();
-    filteredProducts = filteredProducts.filter(
-      (p) =>
-        p.name.toLowerCase().includes(searchLower) ||
-        p.description?.toLowerCase().includes(searchLower)
-    );
-  }
-
-  if (ofertas === "true") {
-    filteredProducts = filteredProducts.filter(
-      (p) => p.compare_at_price && p.compare_at_price > p.price
-    );
-  }
-
-  // Sort products
-  if (ordenar) {
-    switch (ordenar) {
-      case "precio-asc":
-        filteredProducts.sort((a, b) => a.price - b.price);
-        break;
-      case "precio-desc":
-        filteredProducts.sort((a, b) => b.price - a.price);
-        break;
-      case "nombre-asc":
-        filteredProducts.sort((a, b) => a.name.localeCompare(b.name));
-        break;
-      case "nombre-desc":
-        filteredProducts.sort((a, b) => b.name.localeCompare(a.name));
-        break;
-      case "nuevo":
-        filteredProducts.sort(
-          (a, b) =>
-            new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
-        );
-        break;
+    const selectedCat = categories?.find((c) => c.slug === categoria);
+    if (selectedCat) {
+      query = query.eq("category_id", selectedCat.id);
     }
   }
 
-  const selectedCategory = mockCategories.find((c) => c.slug === categoria);
+  // Filter by search term
+  if (buscar) {
+    query = query.or(`name.ilike.%${buscar}%,description.ilike.%${buscar}%`);
+  }
+
+  // Filter by offers (products with compare_at_price)
+  if (ofertas === "true") {
+    query = query.not("compare_at_price", "is", null);
+  }
+
+  // Sort
+  switch (ordenar) {
+    case "precio-asc":
+      query = query.order("price", { ascending: true });
+      break;
+    case "precio-desc":
+      query = query.order("price", { ascending: false });
+      break;
+    case "nombre-asc":
+      query = query.order("name", { ascending: true });
+      break;
+    case "nombre-desc":
+      query = query.order("name", { ascending: false });
+      break;
+    case "nuevo":
+      query = query.order("created_at", { ascending: false });
+      break;
+    default:
+      query = query.order("created_at", { ascending: false });
+  }
+
+  const { data: products } = await query;
+
+  const selectedCategory = categories?.find((c) => c.slug === categoria);
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -321,7 +103,7 @@ export default async function ProductsPage({
           {selectedCategory ? selectedCategory.name : "Todos los Productos"}
         </h1>
         <p className="mt-2 text-muted-foreground">
-          {filteredProducts.length} productos encontrados
+          {products?.length || 0} productos encontrados
         </p>
       </div>
 
@@ -353,7 +135,7 @@ export default async function ProductsPage({
                 Todas las categorías
               </a>
             </SelectItem>
-            {mockCategories.map((cat) => (
+            {categories?.map((cat) => (
               <SelectItem key={cat.id} value={cat.slug}>
                 <a
                   href={`/productos?categoria=${cat.slug}`}
@@ -465,9 +247,9 @@ export default async function ProductsPage({
       )}
 
       {/* Products Grid */}
-      {filteredProducts.length > 0 ? (
+      {products && products.length > 0 ? (
         <div className="grid grid-cols-2 gap-3 sm:gap-6 lg:grid-cols-3 xl:grid-cols-4">
-          {filteredProducts.map((product) => (
+          {products.map((product) => (
             <ProductCard key={product.id} product={product} />
           ))}
         </div>
@@ -476,7 +258,7 @@ export default async function ProductsPage({
           <SlidersHorizontal className="mb-4 h-12 w-12 text-muted-foreground" />
           <h2 className="text-xl font-semibold">No encontramos productos</h2>
           <p className="mt-2 text-muted-foreground">
-            Probá con otros filtros o buscá algo diferente
+            Probá con otros filtros o agregá productos desde el panel admin
           </p>
           <Button className="mt-4" asChild>
             <a href="/productos">Ver todos los productos</a>

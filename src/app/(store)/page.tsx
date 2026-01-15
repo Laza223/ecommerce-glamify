@@ -1,153 +1,10 @@
 import { ProductCard } from "@/components/store/product-card";
 import { Button } from "@/components/ui/button";
 import { storeConfig } from "@/config/store";
-import type { Category, Product } from "@/types";
+import { createClient } from "@/lib/supabase/server";
 import { ArrowRight, Shield, Sparkles, Truck } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-
-// Mock data - will be replaced with Supabase queries
-const mockCategories: Category[] = [
-  {
-    id: "1",
-    name: "Labiales",
-    slug: "labiales",
-    description: "Los mejores labiales",
-    image_url:
-      "https://images.unsplash.com/photo-1586495777744-4413f21062fa?w=400",
-    is_active: true,
-    display_order: 1,
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-  },
-  {
-    id: "2",
-    name: "Bases",
-    slug: "bases",
-    description: "Bases y correctores",
-    image_url:
-      "https://images.unsplash.com/photo-1596704017254-9b121068fb31?w=400",
-    is_active: true,
-    display_order: 2,
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-  },
-  {
-    id: "3",
-    name: "Ojos",
-    slug: "ojos",
-    description: "Maquillaje para ojos",
-    image_url:
-      "https://images.unsplash.com/photo-1583241800698-e8ab01830a07?w=400",
-    is_active: true,
-    display_order: 3,
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-  },
-  {
-    id: "4",
-    name: "Brochas",
-    slug: "brochas",
-    description: "Sets de brochas",
-    image_url:
-      "https://images.unsplash.com/photo-1527799820374-dcf8d9d4a388?w=400",
-    is_active: true,
-    display_order: 4,
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-  },
-];
-
-const mockProducts: Product[] = [
-  {
-    id: "1",
-    category_id: "1",
-    name: "Labial Matte Velvet Rose",
-    slug: "labial-matte-velvet-rose",
-    description: "Labial de larga duración",
-    price: 4500,
-    compare_at_price: 5500,
-    cost_per_item: null,
-    sku: "LAB-001",
-    barcode: null,
-    stock: 15,
-    low_stock_threshold: 5,
-    images: [
-      "https://images.unsplash.com/photo-1586495777744-4413f21062fa?w=400",
-    ],
-    is_active: true,
-    is_featured: true,
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-    category: mockCategories[0],
-  },
-  {
-    id: "2",
-    category_id: "2",
-    name: "Base Líquida Full Coverage",
-    slug: "base-liquida-full-coverage",
-    description: "Cobertura total",
-    price: 8900,
-    compare_at_price: null,
-    cost_per_item: null,
-    sku: "BAS-001",
-    barcode: null,
-    stock: 20,
-    low_stock_threshold: 5,
-    images: [
-      "https://images.unsplash.com/photo-1596704017254-9b121068fb31?w=400",
-    ],
-    is_active: true,
-    is_featured: true,
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-    category: mockCategories[1],
-  },
-  {
-    id: "3",
-    category_id: "3",
-    name: "Paleta de Sombras Sunset",
-    slug: "paleta-sombras-sunset",
-    description: "12 tonos vibrantes",
-    price: 12500,
-    compare_at_price: 15000,
-    cost_per_item: null,
-    sku: "PAL-001",
-    barcode: null,
-    stock: 8,
-    low_stock_threshold: 5,
-    images: [
-      "https://images.unsplash.com/photo-1583241800698-e8ab01830a07?w=400",
-    ],
-    is_active: true,
-    is_featured: true,
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-    category: mockCategories[2],
-  },
-  {
-    id: "4",
-    category_id: "4",
-    name: "Set de Brochas Profesional",
-    slug: "set-brochas-profesional",
-    description: "12 brochas premium",
-    price: 18900,
-    compare_at_price: null,
-    cost_per_item: null,
-    sku: "BRO-001",
-    barcode: null,
-    stock: 3,
-    low_stock_threshold: 5,
-    images: [
-      "https://images.unsplash.com/photo-1527799820374-dcf8d9d4a388?w=400",
-    ],
-    is_active: true,
-    is_featured: true,
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-    category: mockCategories[3],
-  },
-];
 
 const features = [
   {
@@ -164,7 +21,30 @@ const features = [
   },
 ];
 
-export default function HomePage() {
+export default async function HomePage() {
+  const supabase = await createClient();
+
+  // Fetch categories from Supabase
+  const { data: categories } = await supabase
+    .from("categories")
+    .select("*")
+    .eq("is_active", true)
+    .order("display_order");
+
+  // Fetch featured products from Supabase
+  const { data: featuredProducts } = await supabase
+    .from("products")
+    .select(
+      `
+      *,
+      category:categories(id, name, slug)
+    `
+    )
+    .eq("is_active", true)
+    .eq("is_featured", true)
+    .limit(4)
+    .order("created_at", { ascending: false });
+
   return (
     <div className="flex flex-col">
       {/* Hero Section */}
@@ -208,11 +88,8 @@ export default function HomePage() {
             {/* Decorative gradient - Desktop only */}
             <div className="relative hidden lg:flex items-center justify-center">
               <div className="relative h-96 w-96">
-                {/* Main gradient circle */}
                 <div className="absolute right-0 top-0 h-72 w-72 rounded-full bg-gradient-to-br from-primary via-primary/60 to-primary/20 blur-3xl opacity-60" />
-                {/* Secondary accent */}
                 <div className="absolute bottom-10 left-10 h-40 w-40 rounded-full bg-gradient-to-tr from-secondary to-primary/30 blur-2xl opacity-50" />
-                {/* Small highlight */}
                 <div className="absolute right-20 bottom-20 h-24 w-24 rounded-full bg-white/40 blur-xl" />
               </div>
             </div>
@@ -253,32 +130,44 @@ export default function HomePage() {
             </p>
           </div>
 
-          <div className="grid grid-cols-2 gap-3 sm:gap-6 lg:grid-cols-4">
-            {mockCategories.map((category) => (
-              <Link
-                key={category.id}
-                href={`/productos?categoria=${category.slug}`}
-                className="group relative aspect-[4/5] overflow-hidden rounded-2xl"
-              >
-                <Image
-                  src={category.image_url || ""}
-                  alt={category.name}
-                  fill
-                  className="object-cover transition-transform duration-500 group-hover:scale-110"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
-                <div className="absolute bottom-0 left-0 right-0 p-6">
-                  <h3 className="text-xl font-bold text-white">
-                    {category.name}
-                  </h3>
-                  <p className="mt-1 flex items-center text-sm text-white/80 transition-colors group-hover:text-primary">
-                    Ver productos
-                    <ArrowRight className="ml-1 h-4 w-4 transition-transform group-hover:translate-x-1" />
-                  </p>
-                </div>
-              </Link>
-            ))}
-          </div>
+          {categories && categories.length > 0 ? (
+            <div className="grid grid-cols-2 gap-3 sm:gap-6 lg:grid-cols-4">
+              {categories.map((category) => (
+                <Link
+                  key={category.id}
+                  href={`/productos?categoria=${category.slug}`}
+                  className="group relative aspect-[4/5] overflow-hidden rounded-2xl"
+                >
+                  {category.image_url ? (
+                    <Image
+                      src={category.image_url}
+                      alt={category.name}
+                      fill
+                      className="object-cover transition-transform duration-500 group-hover:scale-110"
+                    />
+                  ) : (
+                    <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-primary/40" />
+                  )}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+                  <div className="absolute bottom-0 left-0 right-0 p-6">
+                    <h3 className="text-xl font-bold text-white">
+                      {category.name}
+                    </h3>
+                    <p className="mt-1 flex items-center text-sm text-white/80 transition-colors group-hover:text-primary">
+                      Ver productos
+                      <ArrowRight className="ml-1 h-4 w-4 transition-transform group-hover:translate-x-1" />
+                    </p>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-12">
+              <p className="text-muted-foreground">
+                Próximamente nuevas categorías
+              </p>
+            </div>
+          )}
         </div>
       </section>
 
@@ -302,11 +191,19 @@ export default function HomePage() {
             </Button>
           </div>
 
-          <div className="grid grid-cols-2 gap-3 sm:gap-6 lg:grid-cols-4">
-            {mockProducts.map((product) => (
-              <ProductCard key={product.id} product={product} />
-            ))}
-          </div>
+          {featuredProducts && featuredProducts.length > 0 ? (
+            <div className="grid grid-cols-2 gap-3 sm:gap-6 lg:grid-cols-4">
+              {featuredProducts.map((product) => (
+                <ProductCard key={product.id} product={product} />
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-12">
+              <p className="text-muted-foreground">
+                Próximamente productos destacados
+              </p>
+            </div>
+          )}
 
           <div className="mt-8 text-center md:hidden">
             <Button asChild>

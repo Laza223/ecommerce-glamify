@@ -129,9 +129,11 @@ export function ProductForm({ product, categories }: ProductFormProps) {
 
       router.push("/admin/productos");
       router.refresh();
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const message =
+        error instanceof Error ? error.message : "Error desconocido";
       toast.error("Error al guardar producto", {
-        description: error.message,
+        description: message,
       });
     } finally {
       setIsLoading(false);
@@ -305,19 +307,70 @@ export function ProductForm({ product, categories }: ProductFormProps) {
             <CardHeader>
               <CardTitle>Imágenes</CardTitle>
               <CardDescription>
-                Agregá la URL de las imágenes del producto
+                Subí imágenes del producto (arrastrá o hacé click)
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
+              {/* Cloudinary Upload Widget */}
+              <div className="border-2 border-dashed border-muted-foreground/25 rounded-lg p-6 text-center hover:border-primary/50 transition-colors">
+                <input
+                  type="file"
+                  accept="image/*"
+                  multiple
+                  onChange={async (e) => {
+                    const files = e.target.files;
+                    if (!files) return;
+
+                    for (const file of Array.from(files)) {
+                      const formDataUpload = new FormData();
+                      formDataUpload.append("file", file);
+                      formDataUpload.append(
+                        "upload_preset",
+                        "glamify_products"
+                      );
+
+                      try {
+                        const res = await fetch(
+                          `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload`,
+                          {
+                            method: "POST",
+                            body: formDataUpload,
+                          }
+                        );
+                        const data = await res.json();
+                        if (data.secure_url) {
+                          setFormData((prev) => ({
+                            ...prev,
+                            images: [...prev.images, data.secure_url],
+                          }));
+                          toast.success("Imagen subida");
+                        }
+                      } catch {
+                        toast.error("Error al subir imagen");
+                      }
+                    }
+                    e.target.value = "";
+                  }}
+                  className="hidden"
+                  id="image-upload"
+                />
+                <label htmlFor="image-upload" className="cursor-pointer">
+                  <Upload className="mx-auto h-12 w-12 text-muted-foreground mb-2" />
+                  <p className="text-sm text-muted-foreground">
+                    Click para seleccionar imágenes
+                  </p>
+                </label>
+              </div>
+
+              {/* También permitir URL manual */}
               <div className="flex gap-2">
                 <Input
                   value={imageUrl}
                   onChange={(e) => setImageUrl(e.target.value)}
-                  placeholder="https://ejemplo.com/imagen.jpg"
+                  placeholder="O pegá una URL de imagen..."
                 />
-                <Button type="button" onClick={addImageUrl}>
-                  <Upload className="mr-2 h-4 w-4" />
-                  Agregar
+                <Button type="button" variant="outline" onClick={addImageUrl}>
+                  Agregar URL
                 </Button>
               </div>
 
