@@ -95,6 +95,14 @@ export function ProductForm({ product, categories }: ProductFormProps) {
     try {
       const supabase = createClient();
 
+      // Generate SKU if not provided
+      const generatedSku =
+        formData.sku ||
+        `GLM-${Date.now().toString(36).toUpperCase()}-${Math.random()
+          .toString(36)
+          .substring(2, 5)
+          .toUpperCase()}`;
+
       const productData = {
         name: formData.name,
         slug: formData.slug,
@@ -103,7 +111,7 @@ export function ProductForm({ product, categories }: ProductFormProps) {
         compare_at_price: formData.compare_at_price
           ? Number(formData.compare_at_price)
           : null,
-        sku: formData.sku || null,
+        sku: generatedSku,
         stock: Number(formData.stock),
         low_stock_threshold: Number(formData.low_stock_threshold),
         category_id: formData.category_id || null,

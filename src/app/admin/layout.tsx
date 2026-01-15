@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
+import { createClient as createAdminClient } from "@supabase/supabase-js";
 import { redirect } from "next/navigation";
 import { AdminHeader } from "./components/admin-header";
 import { AdminSidebar } from "./components/admin-sidebar";
@@ -18,8 +19,13 @@ export default async function AdminLayout({
     redirect("/auth/login?redirect=/admin");
   }
 
-  // Check if user is admin
-  const { data: profile } = await supabase
+  // Check if user is admin using service role to bypass RLS
+  const adminSupabase = createAdminClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!
+  );
+
+  const { data: profile } = await adminSupabase
     .from("profiles")
     .select("role, full_name")
     .eq("id", user.id)
