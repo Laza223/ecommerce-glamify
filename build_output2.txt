@@ -1,0 +1,17 @@
+▲ Next.js 16.1.1 (Turbopack)
+- Environments: .env
+
+⚠ The "middleware" file convention is deprecated. Please use "proxy" instead. Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
+  Creating an optimized production build ...
+✓ Compiled successfully in 6.2s
+  Running TypeScript ...
+  Collecting page data using 11 workers ...
+  Generating static pages using 11 workers (0/27) ...
+  Generating static pages using 11 workers (6/27) 
+Error occurred prerendering page "/checkout/failure". Read more: https://nextjs.org/docs/messages/prerender-error
+Error: Minified React error #143; visit https://react.dev/errors/143 for the full message or use the non-minified dev environment for full errors and additional helpful warnings.
+    at <unknown> (C:\Users\User\OneDrive\Documentos\GitHub\Axxen\Axxen Projects\ecommerce-glamify\.next\server\chunks\ssr\[root-of-the-server]__c280978e._.js:1:1651) {
+  digest: '2141621315'
+}
+Export encountered an error on /(store)/checkout/failure/page: /checkout/failure, exiting the build.
+⨯ Next.js build worker exited with code: 1 and signal: null

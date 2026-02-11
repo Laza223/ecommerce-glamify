@@ -1,16 +1,16 @@
+import { createClient } from "@supabase/supabase-js";
 import { NextRequest, NextResponse } from "next/server";
 import { Resend } from "resend";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-// Store verification codes in memory (in production, use Redis or similar)
-// This is a Map<email, { code: string, expires: number }>
-declare global {
-  var verificationCodes: Map<string, { code: string; expires: number }>;
-}
-
-if (!global.verificationCodes) {
-  global.verificationCodes = new Map();
+// Use admin client to bypass RLS for verification codes
+function getAdminClient() {
+  return createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!,
+    { auth: { autoRefreshToken: false, persistSession: false } },
+  );
 }
 
 function generateCode(): string {
@@ -25,12 +25,32 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Email inválido" }, { status: 400 });
     }
 
-    // Generate 6-digit code
+    const supabase = getAdminClient();
     const code = generateCode();
-    const expires = Date.now() + 10 * 60 * 1000; // 10 minutes
+    const expiresAt = new Date(Date.now() + 10 * 60 * 1000).toISOString(); // 10 minutes
 
-    // Store the code
-    global.verificationCodes.set(email.toLowerCase(), { code, expires });
+    // Delete any existing codes for this email
+    await supabase
+      .from("verification_codes")
+      .delete()
+      .eq("email", email.toLowerCase());
+
+    // Store the new code
+    const { error: insertError } = await supabase
+      .from("verification_codes")
+      .insert({
+        email: email.toLowerCase(),
+        code,
+        expires_at: expiresAt,
+      });
+
+    if (insertError) {
+      console.error("Error storing verification code:", insertError);
+      return NextResponse.json(
+        { error: "Error al generar código" },
+        { status: 500 },
+      );
+    }
 
     // Send email with the code
     const { error } = await resend.emails.send({
@@ -67,7 +87,7 @@ export async function POST(request: NextRequest) {
       console.error("Resend error:", error);
       return NextResponse.json(
         { error: "Error al enviar email" },
-        { status: 500 }
+        { status: 500 },
       );
     }
 
